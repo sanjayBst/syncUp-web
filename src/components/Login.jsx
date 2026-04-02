@@ -1,14 +1,20 @@
 import axios from "axios";
 import React, { useState } from "react";
+import { useDispatch } from "react-redux";
+import { addUser } from "../utils/userSlice";
+import { useNavigate } from "react-router-dom";
+import { BASE_URL } from "../utils/constants";
 
 const Login = () => {
-  const [email, setEmail] = useState("sanjaybisht@gmail.com");
+  const [email, setEmail] = useState("amansingh@gmail.com");
   const [password, setPassword] = useState("Qwerty@123");
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   const handleLogin = async () => {
     try {
       const res = await axios.post(
-        "http://localhost:2000/login",
+        BASE_URL + "/login",
         {
           email,
           password,
@@ -17,12 +23,13 @@ const Login = () => {
           withCredentials: true,
         },
       );
-      console.log(res);
+      // console.log(res.data);
+      dispatch(addUser(res.data));
+      return navigate("/");
     } catch (e) {
       console.error(e);
     }
   };
-  
 
   return (
     <div className="flex justify-center my-50">
@@ -51,7 +58,6 @@ const Login = () => {
           </fieldset>
           <div className="card-actions justify-center my-3">
             <button className="btn btn-primary" onClick={handleLogin}>
-              
               Login
             </button>
           </div>
